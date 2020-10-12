@@ -26,4 +26,6 @@ const remove = async id => {
   return await DB.removeTask(id);
 };
 
-module.exports = { getAll, get, create, update, remove };
+const removeTasksByBoardId = async id => DB.removeTasksByBoardId(id);
+
+module.exports = { getAll, get, removeTasksByBoardId, create, update, remove };

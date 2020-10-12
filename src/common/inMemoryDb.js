@@ -103,6 +103,16 @@ const removeTask = async id => {
   return null;
 };
 
+const removeTasksByBoardId = async id => {
+  const tasks = DB_TASKS.filter(task => task.boardId === id);
+
+  if (tasks.length > 0) {
+    tasks.forEach(task => removeTask(task.id));
+  }
+
+  return null;
+};
+
 module.exports = {
   getAllUsers,
   getUser,
@@ -118,5 +128,6 @@ module.exports = {
   getTask,
   createTask,
   updateTask,
-  removeTask
+  removeTask,
+  removeTasksByBoardId
 };
