@@ -1,4 +1,7 @@
 const User = require('../resources/users/user.model');
+const Board = require('../resources/boards/board.model');
+
+// Users
 
 const DB = [];
 
@@ -31,4 +34,48 @@ const removeUser = async id => {
   }
 };
 
-module.exports = { getAllUsers, getUser, createUser, updateUser, removeUser };
+// Boards
+
+const DB_BOARDS = [];
+
+DB_BOARDS.push(new Board(), new Board(), new Board());
+
+const getAllBoards = async () => {
+  return [...DB_BOARDS];
+};
+
+const getBoard = async id => DB_BOARDS.filter(el => el.id === id)[0];
+
+const createBoard = async board => {
+  DB_BOARDS.push(board);
+  return await getBoard(board.id);
+};
+
+const updateBoard = async board => {
+  const targetBoard = DB_BOARDS.find(el => el.id === board.id);
+
+  Object.assign(targetBoard, board);
+
+  return await getBoard(board.id);
+};
+
+const removeBoard = async id => {
+  const boardIndex = DB_BOARDS.findIndex(board => board.id === id);
+
+  if (boardIndex !== -1) {
+    DB_BOARDS.splice(boardIndex, 1);
+  }
+};
+
+module.exports = {
+  getAllUsers,
+  getUser,
+  createUser,
+  updateUser,
+  removeUser,
+  getAllBoards,
+  getBoard,
+  createBoard,
+  updateBoard,
+  removeBoard
+};
