@@ -1,5 +1,6 @@
 const User = require('../resources/users/user.model');
 const Board = require('../resources/boards/board.model');
+const Task = require('./../resources/tasks/task.model');
 
 // Users
 
@@ -67,6 +68,41 @@ const removeBoard = async id => {
   }
 };
 
+// Tasks
+
+const DB_TASKS = [];
+
+DB_TASKS.push(new Task(), new Task(), new Task());
+
+const getAllTasks = async () => {
+  return [...DB_TASKS];
+};
+
+const getTask = async id => DB_TASKS.filter(el => el.id === id)[0];
+
+const createTask = async task => {
+  DB_TASKS.push(task);
+  return task;
+};
+
+const updateTask = async task => {
+  const targetTask = DB_TASKS.find(el => el.id === task.id);
+
+  Object.assign(targetTask, task);
+
+  return await getUser(task.id);
+};
+
+const removeTask = async id => {
+  const taskIndex = DB_TASKS.findIndex(task => task.id === id);
+
+  if (taskIndex !== -1) {
+    return DB_TASKS.splice(taskIndex, 1)[0];
+  }
+
+  return null;
+};
+
 module.exports = {
   getAllUsers,
   getUser,
@@ -77,5 +113,10 @@ module.exports = {
   getBoard,
   createBoard,
   updateBoard,
-  removeBoard
+  removeBoard,
+  getAllTasks,
+  getTask,
+  createTask,
+  updateTask,
+  removeTask
 };
