@@ -113,6 +113,17 @@ const removeTasksByBoardId = async id => {
   return null;
 };
 
+const unAssignTaskUser = async id => {
+  const tasks = DB_TASKS.filter(task => task.userId === id);
+
+  if (tasks.length > 0) {
+    tasks.forEach(task => (task.userId = null));
+    return;
+  }
+
+  return null;
+};
+
 module.exports = {
   getAllUsers,
   getUser,
@@ -129,5 +140,6 @@ module.exports = {
   createTask,
   updateTask,
   removeTask,
-  removeTasksByBoardId
+  removeTasksByBoardId,
+  unAssignTaskUser
 };
