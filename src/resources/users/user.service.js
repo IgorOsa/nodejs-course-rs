@@ -1,5 +1,5 @@
-const tasksRepo = require('../tasks/task.memory.repository');
 const usersRepo = require('./user.memory.repository');
+const taskService = require('../tasks/task.service');
 
 const getAll = () => usersRepo.getAll();
 
@@ -10,7 +10,7 @@ const create = user => usersRepo.create(user);
 const update = user => usersRepo.update(user);
 
 const remove = async id => {
-  await tasksRepo.unAssignTaskUser(id);
+  await taskService.unAssignTaskFromUser(id);
   await usersRepo.remove(id);
 };
 

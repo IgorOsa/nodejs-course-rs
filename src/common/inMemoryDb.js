@@ -99,8 +99,6 @@ const removeTask = async id => {
   if (taskIndex !== -1) {
     return DB_TASKS.splice(taskIndex, 1)[0];
   }
-
-  return null;
 };
 
 const removeTasksByBoardId = async id => {
@@ -113,7 +111,7 @@ const removeTasksByBoardId = async id => {
   return null;
 };
 
-const unAssignTaskUser = async id => {
+const unAssignTaskFromUser = async id => {
   const tasks = DB_TASKS.filter(task => task.userId === id);
 
   if (tasks.length > 0) {
@@ -141,5 +139,5 @@ module.exports = {
   updateTask,
   removeTask,
   removeTasksByBoardId,
-  unAssignTaskUser
+  unAssignTaskFromUser
 };
