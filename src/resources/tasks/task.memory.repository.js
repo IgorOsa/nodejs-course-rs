@@ -1,11 +1,12 @@
 const DB = require('./../../common/inMemoryDb');
+const NOT_FOUND_ERROR = require('./../../common/errors');
 
 const getAll = async () => DB.getAllTasks();
 
 const get = async id => {
   const task = await DB.getTask(id);
 
-  if (!task) throw new Error(`Task with id: ${id} not found!`);
+  if (!task) throw new NOT_FOUND_ERROR(`Task with id: ${id} not found!`);
 
   return task;
 };
@@ -16,19 +17,19 @@ const update = async task => {
   if (get(task.id)) {
     return DB.updateTask(task);
   }
+
+  throw new NOT_FOUND_ERROR(`Cannot update task with ${task.id}!`);
 };
 
 const remove = async id => {
-  const task = await DB.getTask(id);
+  const task = await DB.removeTask(id);
 
-  if (!task) throw new Error(`Task with id: ${id} not found!`);
-
-  return await DB.removeTask(id);
+  if (!task) throw new NOT_FOUND_ERROR(`Task with id: ${id} not found!`);
 };
 
 const removeTasksByBoardId = async id => DB.removeTasksByBoardId(id);
 
-const unAssignTaskUser = async id => DB.unAssignTaskUser(id);
+const unAssignTaskFromUser = async id => DB.unAssignTaskFromUser(id);
 
 module.exports = {
   getAll,
@@ -37,5 +38,5 @@ module.exports = {
   create,
   update,
   remove,
-  unAssignTaskUser
+  unAssignTaskFromUser
 };
