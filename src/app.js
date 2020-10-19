@@ -34,4 +34,15 @@ boardRouter.use('/:boardId/tasks', taskRouter);
 
 app.use(handleErrors);
 
+process.on('uncaughtException', (req, res, route, err) =>
+  logger.logProcessError(req, res, route, err)
+);
+process.on('unhandledRejection', (req, res, route, err) =>
+  logger.logProcessError(req, res, route, err)
+);
+
+// throw Error('Oops!');
+
+// Promise.reject(Error('Oops!'));
+
 module.exports = app;
