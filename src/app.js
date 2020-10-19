@@ -7,6 +7,7 @@ const userRouter = require('./resources/users/user.router');
 const boardRouter = require('./resources/boards/board.router');
 const taskRouter = require('./resources/tasks/task.router');
 const logger = require('./common/logger');
+const handleErrors = require('./common/errorHandler');
 
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
@@ -31,13 +32,6 @@ app.use('/users', userRouter);
 app.use('/boards', boardRouter);
 boardRouter.use('/:boardId/tasks', taskRouter);
 
-app.get('*', (req, res) => {
-  res.status(404).send({ message: 'Not Found' });
-});
-
-app.use((err, req, res, next) => {
-  if (err) res.status(500).send({ message: 'Internal Server Error' });
-  next();
-});
+app.use(handleErrors);
 
 module.exports = app;

@@ -14,7 +14,9 @@ morgan.token('params', req => {
 
 const logFormat = ':method :url :status params::params body::body [:date[iso]]';
 
-const logToConsole = morgan(logFormat);
+const logToConsole = morgan(logFormat, {
+  skip: (req, res) => res.statusCode < 500
+});
 
 const logAccessFile = fs.createWriteStream(
   path.join(__dirname, './../../logs', 'access.log'),
