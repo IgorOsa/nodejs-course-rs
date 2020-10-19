@@ -1,6 +1,8 @@
-const fs = require('fs');
+const { appendFileSync, createWriteStream } = require('fs');
 const path = require('path');
 const morgan = require('morgan');
+
+const exit = process.exit;
 
 morgan.token('body', req => {
   const reqBody = { ...req.body };
@@ -12,13 +14,13 @@ morgan.token('params', req => {
   return JSON.stringify(req.params);
 });
 
-const logFormat = ':method :url :status params::params body::body [:date[iso]]';
+const logFormat = '[:date[iso]] :method :url :status params::params body::body';
 
 const logToConsole = morgan(logFormat, {
   skip: (req, res) => res.statusCode < 500
 });
 
-const logAccessFile = fs.createWriteStream(
+const logAccessFile = createWriteStream(
   path.join(__dirname, './../../logs', 'access.log'),
   {
     flags: 'a',
@@ -30,7 +32,7 @@ const logAccess = morgan(logFormat, {
   stream: logAccessFile
 });
 
-const logErrorFile = fs.createWriteStream(
+const logErrorFile = createWriteStream(
   path.join(__dirname, './../../logs', 'error.log'),
   {
     flags: 'a',
@@ -43,4 +45,18 @@ const logError = morgan(logFormat, {
   skip: (req, res) => res.statusCode < 500
 });
 
-module.exports = { logToConsole, logAccess, logError };
+const logProcessError = err => {
+  console.error(err.stack);
+
+  appendFileSync(
+    path.join(__dirname, './../../logs', 'error.log'),
+    `[${new Date().toLocaleString()}] - ${err.stack}\n`,
+    {
+      encoding: 'utf8'
+    }
+  );
+
+  exit(1);
+};
+
+module.exports = { logToConsole, logAccess, logError, logProcessError };
