@@ -10,11 +10,12 @@ morgan.token('body', req => {
   return JSON.stringify(reqBody);
 });
 
-morgan.token('params', req => {
-  return JSON.stringify(req.params);
+morgan.token('queryParams', req => {
+  return JSON.stringify(req.query);
 });
 
-const logFormat = '[:date[iso]] :method :url :status params::params body::body';
+const logFormat =
+  '[:date[iso]] :method :url :status queryParams::queryParams body::body';
 
 const logToConsole = morgan(logFormat, {
   skip: (req, res) => res.statusCode < 500
