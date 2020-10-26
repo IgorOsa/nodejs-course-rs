@@ -36,6 +36,9 @@ const remove = async params => {
   const { id, boardId } = params;
   const deleted = await (await Task.deleteOne({ _id: id, boardId }))
     .deletedCount;
+  if (!deleted) {
+    throw new NOT_FOUND_ERROR(`Task with id: ${id} not found!`);
+  }
   return deleted;
 };
 
