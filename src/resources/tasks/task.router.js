@@ -6,38 +6,44 @@ const wrap = require('./../../utils/asyncWrapper');
 router.route('/').get(
   wrap(async (req, res) => {
     const tasks = await tasksService.getAll();
-    res.json(tasks);
+    res.json(tasks.map(Task.toResponse));
   })
 );
 
 router.route('/:id').get(
   wrap(async (req, res) => {
     const task = await tasksService.get(req.params.id);
-    res.json(task);
+    res.json(Task.toResponse(task));
   })
 );
 
 router.route('/').post(
   wrap(async (req, res) => {
     const { boardId } = req.params;
-    const task = await tasksService.create(new Task({ ...req.body, boardId }));
-    res.json(task);
+    const task = await tasksService.create(
+      Task.fromRequest({ ...req.body, boardId })
+    );
+    res.json(Task.toResponse(task));
   })
 );
 
 router.route('/:id').put(
   wrap(async (req, res) => {
-    const task = await tasksService.update({
-      id: req.params.id,
-      ...req.body
-    });
-    res.json(task);
+    const task = await tasksService.update(
+      Task.fromRequest({
+        id: req.params.id,
+        boardId: req.params.boardId,
+        ...req.body
+      })
+    );
+    res.json(Task.toResponse(task));
   })
 );
 
-router.route('/:taskId').delete(
+router.route('/:id').delete(
   wrap(async (req, res) => {
-    await tasksService.remove(req.params.taskId);
+    const deleted = await tasksService.remove(Task.fromRequest(req.params));
+    if (!deleted) res.status(404).send('Not found Error!');
     res.status(204).send('The task has been deleted');
   })
 );
