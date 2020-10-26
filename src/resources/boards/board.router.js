@@ -6,21 +6,21 @@ const wrap = require('./../../utils/asyncWrapper');
 router.route('/').get(
   wrap(async (req, res) => {
     const boards = await boardsService.getAll();
-    res.json(boards);
+    res.json(boards.map(Board.toResponse));
   })
 );
 
 router.route('/:id').get(
   wrap(async (req, res) => {
     const board = await boardsService.get(req.params.id);
-    res.json(board);
+    res.json(Board.toResponse(board));
   })
 );
 
 router.route('/').post(
   wrap(async (req, res) => {
-    const board = await boardsService.create(new Board({ ...req.body }));
-    res.json(board);
+    const board = await boardsService.create(Board.fromRequest(req.body));
+    res.json(Board.toResponse(board));
   })
 );
 
@@ -30,7 +30,7 @@ router.route('/:id').put(
       id: req.params.id,
       ...req.body
     });
-    res.json(board);
+    res.json(Board.toResponse(board));
   })
 );
 
