@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema(
     password: String
   },
   {
+    collection: 'users',
     versionKey: false
   }
 );
