@@ -19,24 +19,14 @@ router.route('/:id').get(
 
 router.route('/').post(
   wrap(async (req, res) => {
-    const user = await usersService.create(
-      new User({
-        login: req.body.login,
-        password: req.body.password,
-        name: req.body.name
-      })
-    );
+    const user = await usersService.create(User.fromRequest(req));
     res.json(User.toResponse(user));
   })
 );
 
 router.route('/:id').put(
   wrap(async (req, res) => {
-    const user = await usersService.update({
-      id: req.params.id,
-      name: req.body.name,
-      login: req.body.login
-    });
+    const user = await usersService.update(User.fromRequest(req));
     res.json(User.toResponse(user));
   })
 );
