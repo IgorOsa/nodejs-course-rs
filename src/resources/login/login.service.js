@@ -18,12 +18,12 @@ const signIn = async ({ login, password }) => {
   if (comparisonRes) {
     const { _id } = user;
     const token = jwt.sign({ _id, login }, JWT_SECRET_KEY, {
-      expiresIn: '10m'
+      expiresIn: '30m'
     });
     return token;
   }
 
-  return null;
+  throw new AuthorizationError();
 };
 
 module.exports = { signIn };
