@@ -4,7 +4,7 @@ const User = require('./../resources/users/user.model');
 const { MONGO_CONNECTION_STRING } = require('./config');
 
 const mockUsers = [
-  new User({ name: 'TEST_USER1', login: 'test_user1', password: 'p@sw0rd1' }),
+  new User({ name: 'admin', login: 'admin', password: 'admin' }),
   new User({ name: 'TEST_USER2', login: 'test_user2', password: 'p@sw0rd2' }),
   new User({ name: 'TEST_USER3', login: 'test_user3', password: 'p@sw0rd3' })
 ];
