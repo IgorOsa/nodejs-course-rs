@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const User = require('./user.model');
 const usersService = require('./user.service');
-const wrap = require('../../utils/asyncWrapper');
+const wrap = require('../../common/asyncWrapper');
 
 router.route('/').get(
   wrap(async (req, res) => {

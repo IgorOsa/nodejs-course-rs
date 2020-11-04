@@ -1,7 +1,7 @@
 const router = require('express').Router({ mergeParams: true });
 const Task = require('./task.model');
 const tasksService = require('./task.service');
-const wrap = require('./../../utils/asyncWrapper');
+const wrap = require('../../common/asyncWrapper');
 
 router.route('/').get(
   wrap(async (req, res) => {
