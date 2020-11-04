@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const boardsService = require('./board.service');
 const Board = require('./board.model');
-const wrap = require('./../../utils/asyncWrapper');
+const wrap = require('../../common/asyncWrapper');
 
 router.route('/').get(
   wrap(async (req, res) => {
