@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const uuid = require('uuid');
-const bcrypt = require('bcrypt');
-const { DEFAULT_SALT_ROUNDS } = require('./../../common/config');
+const { hashPassword } = require('./../../common/hashHelpers');
 
 const userSchema = new mongoose.Schema(
   {
@@ -20,12 +19,24 @@ const userSchema = new mongoose.Schema(
 );
 
 async function setHashedPassword(next) {
-  this.password = await bcrypt.hash(this.password, DEFAULT_SALT_ROUNDS);
+  this.password = await hashPassword(this.password);
+  next();
+}
+
+async function updateHashedPassword(next) {
+  const docToUpdate = await this.model.findOne(this.getQuery());
+
+  if (docToUpdate.password !== this._update.password) {
+    const newPassword = await hashPassword(this._update.password);
+    this._update.password = newPassword;
+  }
+
   next();
 }
 
 // hash user password before saving into database
 userSchema.pre('save', setHashedPassword);
+userSchema.pre('findOneAndUpdate', updateHashedPassword);
 
 userSchema.statics.fromRequest = req => {
   const { id } = req.params;
