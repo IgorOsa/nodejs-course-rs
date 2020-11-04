@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const uuid = require('uuid');
+const bcrypt = require('bcrypt');
+const { DEFAULT_SALT_ROUNDS } = require('./../../common/config');
 
 const userSchema = new mongoose.Schema(
   {
@@ -16,6 +18,14 @@ const userSchema = new mongoose.Schema(
     versionKey: false
   }
 );
+
+async function setHashedPassword(next) {
+  this.password = await bcrypt.hash(this.password, DEFAULT_SALT_ROUNDS);
+  next();
+}
+
+// hash user password before saving into database
+userSchema.pre('save', setHashedPassword);
 
 userSchema.statics.fromRequest = req => {
   const { id } = req.params;
